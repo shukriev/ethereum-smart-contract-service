@@ -91,8 +91,8 @@ contract Estacoin is ERC20Interface, Owned, SafeMath {
         name = "Estacoin";
         decimals = 18;
         _totalSupply = 100000000000000000000000000;
-        balances[0x9e7efdbdb4C461f4af5f668Ae782812C82873D07] = _totalSupply;
-        emit Transfer(address(0), 0x9e7efdbdb4C461f4af5f668Ae782812C82873D07, _totalSupply);
+        balances[0x63c14CaceD9e351ED8463E21D9bdee673b26fbbF] = _totalSupply;
+        emit Transfer(address(0), 0x63c14CaceD9e351ED8463E21D9bdee673b26fbbF, _totalSupply);
     }
     
     // Total supply
@@ -116,13 +116,20 @@ contract Estacoin is ERC20Interface, Owned, SafeMath {
         return true;
     }
     
+    // TODO Wallet TO Wallet
+    // function transferWalletToWallet(address from, address to, uint tokens) public returns (bool success) {
+    //     balances[from] = safeSub(balances[from], tokens);
+    //     balances[to] = safeAdd(balances[to], tokens);
+    //     emit Transfer(from, to, tokens);
+    //     return true;
+    // }
+
     // Token owner can approve for spender to transferFrom(...) tokens
     // from the token owner's account
     //
     // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md
     // recommends that there are no checks for the approval double-spend attack
     // as this should be implemented in user interfaces 
-    
     function approve(address spender, uint tokens) public returns (bool success) {
         allowed[msg.sender][spender] = tokens;
         emit Approval(msg.sender, spender, tokens);
@@ -139,7 +146,8 @@ contract Estacoin is ERC20Interface, Owned, SafeMath {
     
     function transferFrom(address from, address to, uint tokens) public returns (bool success) {
         balances[from] = safeSub(balances[from], tokens);
-        allowed[from][msg.sender] = safeSub(allowed[from][msg.sender], tokens);
+        // TODO Ignore allowance
+        // allowed[from][msg.sender] = safeSub(allowed[from][msg.sender], tokens);
         balances[to] = safeAdd(balances[to], tokens);
         emit Transfer(from, to, tokens);
         return true;
@@ -158,9 +166,9 @@ contract Estacoin is ERC20Interface, Owned, SafeMath {
     function approveAndCall(address spender, uint tokens) public returns (bool success) {
         allowed[msg.sender][spender] = tokens;
         emit Approval(msg.sender, spender, tokens);
-        //TODO
-        //ApproveAndCallFallBack(spender).receiveApproval(msg.sender, tokens, this, data);
         
+        //TODO Call
+        //ApproveAndCallFallBack(spender).receiveApproval(msg.sender, tokens, this, data)        
         return true;
     }
     
